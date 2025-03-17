@@ -1,52 +1,6 @@
 var version = "1.13.1 Fixed By Ibra";
 var scriptName = "LA Enhancer (1.13.1) - Fixed by Ibra Gonza II";
 var scriptURL = "https://scripts.ibragonza.nl/enhancer/";
-
-var keycodes = {"a": 65, "b": 66, "c": 67, "skip": 83, "right": 39, "left": 37, "master": 77};
-
-function tryClickWithDelay(button, delay) {
-    return new Promise((resolve) => {
-        if (cansend && filtersApplied) {
-            if (!checkIfNextVillage()) {
-                if (button.hasClass("farm_icon_disabled") || button.html() == undefined) {
-                    window.top.UI.ErrorMessage("That button is not selectable. Skipping row...", 500);
-                    button.closest('tr').hide();
-                } else {
-                    button.click();
-                }
-            }
-        }
-        setTimeout(resolve, delay);
-    });
-}
-
-function turnOnHotkeys() {
-    window.onkeydown = async function (e) {
-        if (editingKey) {
-            editKey(e);
-        } else {
-            let row = window.top.$("#plunder_list tr").filter(":visible").eq(1);
-            let aButton = row.children("td").eq(9).children("a");
-            let bButton = row.children("td").eq(10).children("a");
-            let cButton = row.children("td").eq(11).children("a");
-
-            if (e.which === keycodes.a || e.which === keycodes.b || e.which === keycodes.master) {
-                let actions = [];
-                if (e.which === keycodes.a) actions.push(() => tryClickWithDelay(aButton, 350));
-                if (e.which === keycodes.b) actions.push(() => tryClickWithDelay(bButton, 350));
-                if (e.which === keycodes.master) actions.push(() => tryClickWithDelay(cButton, 350));
-                
-                for (let action of actions) {
-                    await action();
-                }
-            }
-        }
-        e.preventDefault();
-    };
-}
-
-turnOnHotkeys();
-
 var updateNotesURL = "https://forum.tribalwars.net/index.php?threads/ntoombs19s-fa-filter.266604/page-15#post-7053294";
 var working = true;
 var resourcesLoaded = false;
@@ -1164,21 +1118,22 @@ function tryClick(button) {
         if (!checkIfNextVillage()) {
             console.log(button.html());
             if (button.hasClass("farm_icon_disabled") || button.html() == undefined) {
-
                 window.top.UI.ErrorMessage("That button is not selectable. Skipping row...", 500);
                 button.closest('tr').hide();
-            }
-            else {
-                button.click();
-                if (userset[s.next_village_scouts] || userset[s.next_village_farming_troops]) {
-                    doTime(200);
-                } else {
-                    doTime(200);
-                }
+            } else {
+                setTimeout(() => {
+                    button.click();
+                    if (userset[s.next_village_scouts] || userset[s.next_village_farming_troops]) {
+                        doTime(350);
+                    } else {
+                        doTime(350);
+                    }
+                }, 350); // 350ms gecikme ekledik
             }
         }
     }
 }
+
 function doTime(millsec) {
     cansend = false;
     setTimeout(function () {
@@ -1510,32 +1465,3 @@ function uglyHider(linker) {
         window.top.$('#settingsBody').toggle();
     }
 }
-
-window.top.$.getScript(scriptURL + 'lib/jstorage.js', function () {
-    window.top.$.getScript(scriptURL + "resources.js", function () {
-        if (window.top.$.jStorage.get("language") == null) {
-            setDefaultLanguage();
-        }
-        window.top.$.getScript(scriptURL + "lang/" + window.top.$.jStorage.get("language") + '.js', function () {
-            console.log("init");
-            checkPage();
-        });
-    });
-    window.top.$.getScript(scriptURL + 'notify.js');
-});
-
-function run() {
-    console.log("run");
-    checkVersion();
-    checkWorking();
-    setVersion();
-    makeItPretty();
-    showSettings();
-    turnOnHotkeys();
-    hotkeysOnOff();
-    if (userset[s.enable_auto_run] != false) {
-        applySettings();
-    }
-}
-
-run();
