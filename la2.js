@@ -1118,22 +1118,21 @@ function tryClick(button) {
         if (!checkIfNextVillage()) {
             console.log(button.html());
             if (button.hasClass("farm_icon_disabled") || button.html() == undefined) {
+
                 window.top.UI.ErrorMessage("That button is not selectable. Skipping row...", 500);
                 button.closest('tr').hide();
-            } else {
-                setTimeout(() => {
-                    button.click();
-                    if (userset[s.next_village_scouts] || userset[s.next_village_farming_troops]) {
-                        doTime(1350);
-                    } else {
-                        doTime(1350);
-                    }
-                }, 1350); // 1350ms gecikme ekledik
+            }
+            else {
+                button.click();
+                if (userset[s.next_village_scouts] || userset[s.next_village_farming_troops]) {
+                    doTime(350);
+                } else {
+                    doTime(350);
+                }
             }
         }
     }
 }
-
 function doTime(millsec) {
     cansend = false;
     setTimeout(function () {
