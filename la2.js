@@ -1118,17 +1118,11 @@ function tryClick(button) {
         if (!checkIfNextVillage()) {
             console.log(button.html());
             if (button.hasClass("farm_icon_disabled") || button.html() == undefined) {
-
                 window.top.UI.ErrorMessage("That button is not selectable. Skipping row...", 500);
                 button.closest('tr').hide();
-            }
-            else {
+            } else {
                 button.click();
-                if (userset[s.next_village_scouts] || userset[s.next_village_farming_troops]) {
-                    doTime(350);
-                } else {
-                    doTime(350);
-                }
+                doTime(350); // 350ms gecikme ekledik
             }
         }
     }
@@ -1137,7 +1131,7 @@ function doTime(millsec) {
     cansend = false;
     setTimeout(function () {
         cansend = true;
-    }, millsec);
+    }, millsec + Math.floor(Math.random() * 50)); // Ekstra 0-50ms rastgele bekleme süresi
 }
 function editKey(e) {
     if ((e.keyCode <= 37 && e.keyCode >= 40) || (e.keyCode <= 48 && e.keyCode >= 90)) {
