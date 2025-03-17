@@ -1124,11 +1124,11 @@ function tryClick(button) {
                 setTimeout(() => {
                     button.click();
                     if (userset[s.next_village_scouts] || userset[s.next_village_farming_troops]) {
-                        doTime(350);
+                        doTime(1350);
                     } else {
-                        doTime(350);
+                        doTime(1350);
                     }
-                }, 350); // 350ms gecikme ekledik
+                }, 1350); // 1350ms gecikme ekledik
             }
         }
     }
